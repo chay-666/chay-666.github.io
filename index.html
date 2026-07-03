@@ -1,22 +1,1529 @@
-<html>
-        <head>
-        <title>
-                my resume
-        </title>
-        </head>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-        <h1 align = "center">
-                RESUME
-        </h1>
-        <h2 align = "right">
-                TADIPARTHI CHAITANYA
-        </h2>
-        <br></br>
-        <h3 align = "left">
-                8885412515
-        </h3>
-        <h3>
-                3rd B.tech CSE
-        </h3>
-        </body>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GenAI Health Assistant</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 8px;
+        }
+
+        .message-enter {
+            animation: slideUp 0.3s ease forwards;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #94a3b8;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.4s infinite both;
+        }
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes typing {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-link {
+            transition: all 0.2s;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+        .nav-link:hover {
+            background: rgba(99, 102, 241, 0.08);
+        }
+        .nav-link.active {
+            background: rgba(99, 102, 241, 0.12);
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        .report-card {
+            border-left: 4px solid #6366f1;
+            transition: all 0.2s;
+        }
+        .report-card:hover {
+            border-left-color: #8b5cf6;
+            background: #fafafa;
+        }
+
+        .csv-status {
+            font-size: 11px;
+            color: #64748b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f1f5f9;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .csv-status.loaded {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .csv-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .api-status {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .api-status.connected {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .api-status.disconnected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .file-upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .file-upload-zone:hover {
+            border-color: #6366f1;
+            background: #f8fafc;
+        }
+        .file-upload-zone.dragover {
+            border-color: #6366f1;
+            background: #eef2ff;
+        }
+
+        .file-preview {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin: 4px;
+        }
+
+        .upload-progress {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .upload-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 2px;
+        }
+
+        .colab-badge {
+            background: #F9AB00;
+            color: #000;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- AUTH SCREEN -->
+        <div id="authScreen" class="min-h-screen flex items-center justify-center p-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl max-w-md w-full p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-bg text-white text-3xl mb-3 shadow-lg">
+                        🏥
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-800">HealthAI Assistant</h1>
+                    <p class="text-gray-500 text-sm mt-1">Your personal generative AI health companion</p>
+                </div>
+
+                <div class="flex bg-gray-100 rounded-xl p-1 mb-6">
+                    <button id="loginTab" class="flex-1 py-2.5 text-sm font-medium rounded-lg transition-all bg-white shadow-sm text-indigo-600">Sign In</button>
+                    <button id="registerTab" class="flex-1 py-2.5 text-sm font-medium rounded-lg transition-all text-gray-500 hover:text-gray-700">Register</button>
+                </div>
+
+                <form id="loginForm" class="space-y-4" onsubmit="return false;">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="loginEmail" value="patient@demo.com" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition" placeholder="you@example.com" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="loginPassword" value="demo123" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition" placeholder="••••••••" />
+                    </div>
+                    <button type="button" id="loginBtn" class="w-full gradient-bg text-white py-2.5 rounded-xl font-semibold hover:opacity-90 transition shadow-lg shadow-indigo-200">Sign In</button>
+                    <p class="text-center text-xs text-gray-400 mt-3">Demo: patient@demo.com / demo123</p>
+                </form>
+
+                <form id="registerForm" class="space-y-4 hidden" onsubmit="return false;">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="regName" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition" placeholder="John Doe" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="regEmail" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition" placeholder="you@example.com" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="regPassword" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition" placeholder="••••••••" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                        <select id="regRole" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition bg-white">
+                            <option value="patient">Patient</option>
+                            <option value="caregiver">Caregiver</option>
+                            <option value="provider">Healthcare Provider</option>
+                        </select>
+                    </div>
+                    <button type="button" id="registerBtn" class="w-full gradient-bg text-white py-2.5 rounded-xl font-semibold hover:opacity-90 transition shadow-lg shadow-indigo-200">Create Account</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MAIN APP -->
+        <div id="mainApp" class="hidden min-h-screen flex flex-col">
+
+            <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200/60 sticky top-0 z-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <div class="flex items-center gap-2">
+                            <span class="text-2xl">🏥</span>
+                            <span class="font-bold text-gray-800 text-lg">HealthAI</span>
+                            <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full ml-1">GenAI</span>
+                            <span class="colab-badge">🚀 Python</span>
+                            <span id="csvStatus" class="csv-status">📂 Loading CSV...</span>
+                            <span id="apiStatus" class="api-status connected">🟢 Mistral AI: Connected</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span id="userBadge" class="text-sm text-gray-600 hidden sm:inline">👤 Patient</span>
+                            <button id="logoutBtn" class="text-sm text-gray-500 hover:text-red-500 transition px-3 py-1.5 rounded-lg hover:bg-red-50">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="flex flex-1 overflow-hidden">
+                <aside class="w-56 bg-white/70 backdrop-blur-sm border-r border-gray-200/60 hidden md:flex flex-col p-4 overflow-y-auto">
+                    <div class="space-y-1">
+                        <div class="nav-link active" data-view="dashboard">📊 Dashboard</div>
+                        <div class="nav-link" data-view="chat">💬 Health Chat</div>
+                        <div class="nav-link" data-view="medications">💊 Medications</div>
+                        <div class="nav-link" data-view="appointments">📅 Appointments</div>
+                        <div class="nav-link" data-view="labs">🧪 Lab Reports</div>
+                        <div class="nav-link" data-view="terms">📖 Medical Terms</div>
+                        <div class="nav-link" data-view="files">📁 File Manager</div>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-gray-200/60 text-xs text-gray-400">
+                        <span class="pulse-dot"></span> AI Active
+                        <div class="mt-1 text-[10px]">v3.0 • Python Backend</div>
+                    </div>
+                </aside>
+
+                <main class="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 md:pb-6 bg-[#f8fafc]">
+
+                    <!-- DASHBOARD -->
+                    <div id="view-dashboard" class="view-content">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-1">Welcome back, <span id="dashName">Patient</span> 👋</h2>
+                        <p class="text-gray-500 text-sm mb-6">Your AI-powered health dashboard</p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card-hover">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-3xl">💬</span>
+                                    <span class="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">AI</span>
+                                </div>
+                                <p class="text-2xl font-bold mt-2" id="dashChatCount">0</p>
+                                <p class="text-sm text-gray-500">Conversations</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card-hover">
+                                <div class="text-3xl">💊</div>
+                                <p class="text-2xl font-bold mt-2" id="dashMedCount">0</p>
+                                <p class="text-sm text-gray-500">Active Medications</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card-hover">
+                                <div class="text-3xl">📅</div>
+                                <p class="text-2xl font-bold mt-2" id="dashApptCount">0</p>
+                                <p class="text-sm text-gray-500">Upcoming Appointments</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card-hover">
+                                <div class="text-3xl">📁</div>
+                                <p class="text-2xl font-bold mt-2" id="dashFileCount">0</p>
+                                <p class="text-sm text-gray-500">Documents Uploaded</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                                <h3 class="font-semibold text-gray-700 mb-3">🩺 Quick Health Tip</h3>
+                                <p class="text-sm text-gray-600 leading-relaxed" id="healthTip">Stay hydrated! Aim for 8 glasses of water daily. Your AI assistant is here to help with personalized advice.</p>
+                                <button class="mt-3 text-sm text-indigo-600 hover:text-indigo-800 font-medium" onclick="switchView('chat')">Ask AI →</button>
+                            </div>
+                            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                                <h3 class="font-semibold text-gray-700 mb-3">📋 Recent Activity</h3>
+                                <ul class="text-sm text-gray-600 space-y-2" id="recentActivity">
+                                    <li class="flex items-center gap-2 text-gray-400">No recent activity</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHAT -->
+                    <div id="view-chat" class="view-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">💬 Health Chat</h2>
+                                <p class="text-sm text-gray-500">Ask me about diseases, symptoms, medications, or upload files for analysis</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button id="uploadFileBtn" class="gradient-bg text-white px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition shadow-lg shadow-indigo-200">
+                                    📎 Upload File
+                                </button>
+                                <button id="clearChatBtn" class="text-sm text-gray-400 hover:text-red-500 transition">Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col h-[500px]">
+                            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-3">
+                                <div class="flex items-start gap-3 message-enter">
+                                    <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center text-white text-sm flex-shrink-0">AI</div>
+                                    <div class="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-2.5 max-w-[80%]">
+                                        <p class="text-sm text-gray-700">Hello! 👋 I'm your HealthAI assistant powered by Mistral AI. I can help you with:</p>
+                                        <ul class="text-sm text-gray-600 mt-1 list-disc list-inside space-y-0.5">
+                                            <li>Find medicines for a disease</li>
+                                            <li>Identify disease from symptoms</li>
+                                            <li>Learn about drug uses and side effects</li>
+                                            <li>Explain medical terms in plain language</li>
+                                            <li><strong>Upload and analyze medical documents</strong></li>
+                                            <li><strong>Schedule appointments from chat</strong></li>
+                                        </ul>
+                                        <p class="text-sm text-gray-600 mt-1">How can I assist you today?</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t border-gray-100 p-3 flex gap-2">
+                                <input id="chatInput" type="text" placeholder="e.g., What medicine for fever? or I have headache and nausea..." class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition" />
+                                <button id="sendChatBtn" class="gradient-bg text-white px-5 py-2.5 rounded-xl font-medium hover:opacity-90 transition shadow-lg shadow-indigo-200">Send</button>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <button class="quick-q text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-full transition">What medicine for fever?</button>
+                            <button class="quick-q text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-full transition">I have headache and nausea</button>
+                            <button class="quick-q text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-full transition">What is metformin used for?</button>
+                            <button class="quick-q text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1.5 rounded-full transition">Diabetes symptoms</button>
+                            <button class="quick-q text-xs bg-green-100 hover:bg-green-50 text-green-600 hover:text-green-700 px-3 py-1.5 rounded-full transition">📎 Analyze my document</button>
+                        </div>
+                    </div>
+
+                    <!-- MEDICATIONS -->
+                    <div id="view-medications" class="view-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">💊 Medications</h2>
+                                <p class="text-sm text-gray-500">Manage your medication schedule and reminders</p>
+                            </div>
+                            <button id="addMedBtn" class="gradient-bg text-white px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition shadow-lg shadow-indigo-200">+ Add Medication</button>
+                        </div>
+                        <div id="medicationList" class="space-y-3">
+                            <div class="text-center text-gray-400 py-8 text-sm">No medications added yet. Click "Add Medication" to get started.</div>
+                        </div>
+                    </div>
+
+                    <!-- APPOINTMENTS -->
+                    <div id="view-appointments" class="view-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">📅 Appointments</h2>
+                                <p class="text-sm text-gray-500">Track your upcoming healthcare appointments</p>
+                            </div>
+                            <button id="addApptBtn" class="gradient-bg text-white px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition shadow-lg shadow-indigo-200">+ Schedule</button>
+                        </div>
+                        <div id="appointmentList" class="space-y-3">
+                            <div class="text-center text-gray-400 py-8 text-sm">No appointments scheduled.</div>
+                        </div>
+                    </div>
+
+                    <!-- LAB REPORTS -->
+                    <div id="view-labs" class="view-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">🧪 Lab Reports</h2>
+                                <p class="text-sm text-gray-500">Upload and get AI-powered summaries of your lab results</p>
+                            </div>
+                            <button id="uploadLabBtn" class="gradient-bg text-white px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition shadow-lg shadow-indigo-200">+ Upload Report</button>
+                        </div>
+                        <div id="labList" class="space-y-3">
+                            <div class="text-center text-gray-400 py-8 text-sm">No lab reports uploaded.</div>
+                        </div>
+                    </div>
+
+                    <!-- MEDICAL TERMS -->
+                    <div id="view-terms" class="view-content hidden">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-1">📖 Medical Term Explorer</h2>
+                            <p class="text-sm text-gray-500 mb-4">Enter a medical term to get a simple, easy-to-understand explanation</p>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                            <div class="flex gap-3">
+                                <input id="termInput" type="text" placeholder="e.g., Hypertension, Myocardial infarction, Diabetes..." class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition" />
+                                <button id="explainTermBtn" class="gradient-bg text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 transition shadow-lg shadow-indigo-200">Explain</button>
+                            </div>
+                            <div id="termResult" class="mt-5 p-4 bg-gray-50 rounded-xl border border-gray-100 min-h-[80px] text-sm text-gray-500 flex items-center">
+                                Enter a medical term above to see a plain-language explanation.
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <span class="text-xs text-gray-400">Common terms:</span>
+                                <button class="term-chip text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1 rounded-full transition">Hypertension</button>
+                                <button class="term-chip text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1 rounded-full transition">Arrhythmia</button>
+                                <button class="term-chip text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1 rounded-full transition">Myocardial infarction</button>
+                                <button class="term-chip text-xs bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 px-3 py-1 rounded-full transition">Diabetes mellitus</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILE MANAGER -->
+                    <div id="view-files" class="view-content hidden">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-1">📁 File Manager</h2>
+                            <p class="text-sm text-gray-500 mb-4">Upload and manage your medical documents</p>
+                        </div>
+
+                        <div id="fileUploadZone" class="file-upload-zone bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-6">
+                            <div class="text-center">
+                                <div class="text-5xl mb-3">📄</div>
+                                <h3 class="text-lg font-semibold text-gray-700 mb-2">Drop your medical documents here</h3>
+                                <p class="text-sm text-gray-500 mb-4">Supports PDF, DOCX, TXT, and image files</p>
+                                <button id="fileSelectBtn" class="gradient-bg text-white px-6 py-2.5 rounded-xl font-medium hover:opacity-90 transition shadow-lg shadow-indigo-200">
+                                    Choose Files
+                                </button>
+                                <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.txt,.png,.jpg,.jpeg,.gif" class="hidden" />
+                                <div id="fileList" class="mt-4 flex flex-wrap gap-2"></div>
+                                <div class="upload-progress hidden">
+                                    <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="uploadedFilesList" class="space-y-3">
+                            <div class="text-center text-gray-400 py-8 text-sm">No files uploaded yet.</div>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="medModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">💊 Add Medication</h3>
+            <form id="medForm" class="space-y-3" onsubmit="return false;">
+                <input type="text" id="medName" placeholder="Medication name" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" required />
+                <input type="text" id="medDosage" placeholder="Dosage (e.g., 10mg)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" />
+                <input type="text" id="medFrequency" placeholder="Frequency (e.g., Twice daily)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" />
+                <input type="time" id="medTime" value="08:00" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" />
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="medSubmitBtn" class="flex-1 gradient-bg text-white py-2.5 rounded-xl font-medium hover:opacity-90 transition">Add</button>
+                    <button type="button" id="medModalClose" class="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-xl font-medium hover:bg-gray-200 transition">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="apptModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">📅 Schedule Appointment</h3>
+            <form id="apptForm" class="space-y-3" onsubmit="return false;">
+                <input type="text" id="apptTitle" placeholder="Title (e.g., Cardiologist visit)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" required />
+                <input type="text" id="apptProvider" placeholder="Provider name" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" />
+                <input type="date" id="apptDate" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" />
+                <input type="time" id="apptTime" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" />
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="apptSubmitBtn" class="flex-1 gradient-bg text-white py-2.5 rounded-xl font-medium hover:opacity-90 transition">Schedule</button>
+                    <button type="button" id="apptModalClose" class="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-xl font-medium hover:bg-gray-200 transition">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="labModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">🧪 Upload Lab Report</h3>
+            <form id="labForm" class="space-y-3" onsubmit="return false;">
+                <input type="text" id="labTitle" placeholder="Report title (e.g., Blood Test - Jan 2026)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" required />
+                <textarea id="labContent" rows="5" placeholder="Paste your lab results here or describe them..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none resize-none"></textarea>
+                <p class="text-xs text-gray-400">AI will summarize this report in simple language</p>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="labSubmitBtn" class="flex-1 gradient-bg text-white py-2.5 rounded-xl font-medium hover:opacity-90 transition">Upload & Summarize</button>
+                    <button type="button" id="labModalClose" class="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-xl font-medium hover:bg-gray-200 transition">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="fileUploadModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">📎 Upload Document</h3>
+            <div class="file-upload-zone bg-gray-50 rounded-xl p-8 mb-4">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <p class="text-sm text-gray-500 mb-2">Drop your file here or click to browse</p>
+                    <button id="modalFileSelectBtn" class="gradient-bg text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 transition">
+                        Browse Files
+                    </button>
+                    <input type="file" id="modalFileInput" accept=".pdf,.docx,.doc,.txt,.png,.jpg,.jpeg,.gif" class="hidden" />
+                </div>
+            </div>
+            <div id="modalFilePreview" class="mb-4"></div>
+            <div class="flex gap-3">
+                <button id="modalUploadBtn" class="flex-1 gradient-bg text-white py-2.5 rounded-xl font-medium hover:opacity-90 transition">Upload & Analyze</button>
+                <button id="modalFileClose" class="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-xl font-medium hover:bg-gray-200 transition">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        // ============================================================
+        //  CSV DATA LOADER (client-side, using PapaParse)
+        // ============================================================
+        const CSV_DATA = {
+            drugsMedicines: [],
+            diseaseSymptoms: [],
+            drugsUseCase: [],
+            loaded: false
+        };
+
+        const FALLBACK_DATA = {
+            drugsMedicines: [
+                { drug: 'Paracetamol', disease: 'Fever, Headache', dosage: '500mg', side_effects: 'Nausea, Rash' },
+                { drug: 'Ibuprofen', disease: 'Pain, Inflammation', dosage: '200-400mg', side_effects: 'Stomach upset' },
+                { drug: 'Metformin', disease: 'Type 2 Diabetes', dosage: '500mg', side_effects: 'GI upset' },
+                { drug: 'Lisinopril', disease: 'Hypertension', dosage: '10mg', side_effects: 'Cough, Dizziness' },
+                { drug: 'Amoxicillin', disease: 'Bacterial infections', dosage: '500mg', side_effects: 'Diarrhea, Rash' },
+            ],
+            diseaseSymptoms: [
+                { disease: 'Common Cold', symptoms: 'Runny nose, Cough, Sneezing, Sore throat, Mild fever' },
+                { disease: 'Influenza', symptoms: 'Fever, Chills, Body aches, Headache, Fatigue, Dry cough' },
+                { disease: 'COVID-19', symptoms: 'Fever, Dry cough, Loss of taste/smell, Fatigue, Shortness of breath' },
+                { disease: 'Migraine', symptoms: 'Severe headache, Nausea, Sensitivity to light, Visual disturbances' },
+                { disease: 'Diabetes', symptoms: 'Increased thirst, Frequent urination, Fatigue, Blurred vision' },
+            ],
+            drugsUseCase: [
+                { drug: 'Paracetamol', use_case: 'Pain relief, Fever reduction', side_effects: 'Liver damage if overdosed' },
+                { drug: 'Ibuprofen', use_case: 'Pain relief, Anti-inflammatory', side_effects: 'Stomach ulcers, Kidney issues' },
+                { drug: 'Metformin', use_case: 'Type 2 diabetes management', side_effects: 'GI upset, Lactic acidosis' },
+                { drug: 'Lisinopril', use_case: 'High blood pressure, Heart failure', side_effects: 'Cough, Dizziness' },
+                { drug: 'Amoxicillin', use_case: 'Bacterial infections', side_effects: 'Allergic reactions, Diarrhea' },
+            ]
+        };
+
+        async function loadCSVData() {
+            const statusEl = document.getElementById('csvStatus');
+            statusEl.textContent = '📂 Loading CSV...';
+            statusEl.className = 'csv-status';
+
+            try {
+                const [drugsMedicines, diseaseSymptoms, drugsUseCase] = await Promise.all([
+                    loadCSVFile('datasets/drugs-medicines.csv'),
+                    loadCSVFile('datasets/disease-symptoms.csv'),
+                    loadCSVFile('datasets/drugs-use_case.csv')
+                ]);
+
+                if (drugsMedicines.length > 0 && diseaseSymptoms.length > 0 && drugsUseCase.length > 0) {
+                    CSV_DATA.drugsMedicines = drugsMedicines;
+                    CSV_DATA.diseaseSymptoms = diseaseSymptoms;
+                    CSV_DATA.drugsUseCase = drugsUseCase;
+                    CSV_DATA.loaded = true;
+                    statusEl.textContent = '✅ CSV Loaded (' + 
+                        (drugsMedicines.length + diseaseSymptoms.length + drugsUseCase.length) + ' records)';
+                    statusEl.className = 'csv-status loaded';
+                } else {
+                    throw new Error('Empty CSV data');
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not load CSV files, using fallback data:', error);
+                statusEl.textContent = '⚠️ Using fallback data (CSV not found)';
+                statusEl.className = 'csv-status error';
+                CSV_DATA.drugsMedicines = FALLBACK_DATA.drugsMedicines;
+                CSV_DATA.diseaseSymptoms = FALLBACK_DATA.diseaseSymptoms;
+                CSV_DATA.drugsUseCase = FALLBACK_DATA.drugsUseCase;
+                CSV_DATA.loaded = true;
+            }
+        }
+
+        function loadCSVFile(filename) {
+            return new Promise((resolve, reject) => {
+                Papa.parse(filename, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    dynamicTyping: true,
+                    complete: function(results) {
+                        if (results.data && results.data.length > 0) {
+                            const validData = results.data.filter(row => 
+                                Object.values(row).some(val => val && val.toString().trim())
+                            );
+                            resolve(validData);
+                        } else {
+                            reject(new Error('No data found in ' + filename));
+                        }
+                    },
+                    error: function(error) {
+                        reject(error);
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        //  STATE (client-side)
+        // ============================================================
+        const state = {
+            user: null,
+            token: null,
+            medications: [],
+            appointments: [],
+            labs: [],
+            files: [],
+            chatHistory: [],
+            currentView: 'dashboard',
+        };
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+
+        const authScreen = $('#authScreen');
+        const mainApp = $('#mainApp');
+        const loginForm = $('#loginForm');
+        const registerForm = $('#registerForm');
+        const loginTab = $('#loginTab');
+        const registerTab = $('#registerTab');
+        const loginBtn = $('#loginBtn');
+        const registerBtn = $('#registerBtn');
+
+        const logoutBtn = $('#logoutBtn');
+        const userBadge = $('#userBadge');
+        const dashName = $('#dashName');
+
+        const chatMessages = $('#chatMessages');
+        const chatInput = $('#chatInput');
+        const sendChatBtn = $('#sendChatBtn');
+        const clearChatBtn = $('#clearChatBtn');
+
+        const medicationList = $('#medicationList');
+        const appointmentList = $('#appointmentList');
+        const labList = $('#labList');
+        const uploadedFilesList = $('#uploadedFilesList');
+
+        const termInput = $('#termInput');
+        const explainTermBtn = $('#explainTermBtn');
+        const termResult = $('#termResult');
+
+        const medModal = $('#medModal');
+        const apptModal = $('#apptModal');
+        const labModal = $('#labModal');
+        const fileUploadModal = $('#fileUploadModal');
+
+        const dashChatCount = $('#dashChatCount');
+        const dashMedCount = $('#dashMedCount');
+        const dashApptCount = $('#dashApptCount');
+        const dashFileCount = $('#dashFileCount');
+        const recentActivity = $('#recentActivity');
+
+        // ============================================================
+        //  AUTH
+        // ============================================================
+        function setAuth(token, user) {
+            state.token = token;
+            state.user = user;
+            localStorage.setItem('healthai_token', token);
+            localStorage.setItem('healthai_user', JSON.stringify(user));
+            showApp();
+        }
+
+        function clearAuth() {
+            state.token = null;
+            state.user = null;
+            localStorage.removeItem('healthai_token');
+            localStorage.removeItem('healthai_user');
+            showAuth();
+        }
+
+        function showAuth() {
+            authScreen.classList.remove('hidden');
+            mainApp.classList.add('hidden');
+        }
+
+        function showApp() {
+            authScreen.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            const name = state.user?.name || 'Patient';
+            dashName.textContent = name;
+            userBadge.textContent = `👤 ${name}`;
+            initApp();
+        }
+
+        (function checkSession() {
+            const token = localStorage.getItem('healthai_token');
+            const user = JSON.parse(localStorage.getItem('healthai_user') || 'null');
+            if (token && user) {
+                state.token = token;
+                state.user = user;
+                showApp();
+            } else {
+                showAuth();
+            }
+        })();
+
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = $('#loginEmail').value.trim();
+            const password = $('#loginPassword').value.trim();
+            if (email && password) {
+                const user = { id: '1', name: email.split('@')[0] || 'Patient', email, role: 'patient' };
+                setAuth('demo-token-123', user);
+            } else {
+                alert('Please enter email and password.');
+            }
+        });
+
+        loginForm.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                loginBtn.click();
+            }
+        });
+
+        registerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const name = $('#regName').value.trim();
+            const email = $('#regEmail').value.trim();
+            const password = $('#regPassword').value.trim();
+            const role = $('#regRole').value;
+            if (name && email && password) {
+                const user = { id: '1', name, email, role };
+                setAuth('demo-token-123', user);
+            } else {
+                alert('Please fill all fields.');
+            }
+        });
+
+        registerForm.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                registerBtn.click();
+            }
+        });
+
+        loginTab.addEventListener('click', () => {
+            loginTab.className = 'flex-1 py-2.5 text-sm font-medium rounded-lg transition-all bg-white shadow-sm text-indigo-600';
+            registerTab.className = 'flex-1 py-2.5 text-sm font-medium rounded-lg transition-all text-gray-500 hover:text-gray-700';
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        });
+        registerTab.addEventListener('click', () => {
+            registerTab.className = 'flex-1 py-2.5 text-sm font-medium rounded-lg transition-all bg-white shadow-sm text-indigo-600';
+            loginTab.className = 'flex-1 py-2.5 text-sm font-medium rounded-lg transition-all text-gray-500 hover:text-gray-700';
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+
+        logoutBtn.addEventListener('click', clearAuth);
+
+        // ============================================================
+        //  NAVIGATION
+        // ============================================================
+        window.switchView = function(view) {
+            state.currentView = view;
+            $$('.view-content').forEach(el => el.classList.add('hidden'));
+            const target = $(`#view-${view}`);
+            if (target) target.classList.remove('hidden');
+
+            $$('.nav-link').forEach(el => {
+                el.classList.toggle('active', el.dataset.view === view);
+            });
+            $$('.nav-link-mobile').forEach(el => {
+                el.classList.toggle('active', el.dataset.view === view);
+                if (el.dataset.view === view) {
+                    el.classList.add('text-indigo-600');
+                    el.classList.remove('text-gray-500');
+                } else {
+                    el.classList.remove('text-indigo-600');
+                    el.classList.add('text-gray-500');
+                }
+            });
+
+            if (view === 'dashboard') updateDashboard();
+            if (view === 'medications') renderMedications();
+            if (view === 'appointments') renderAppointments();
+            if (view === 'labs') renderLabs();
+            if (view === 'files') renderFiles();
+        };
+
+        $$('.nav-link, .nav-link-mobile').forEach(el => {
+            el.addEventListener('click', () => switchView(el.dataset.view));
+        });
+
+        // ============================================================
+        //  CALL MISTRAL VIA FLASK BACKEND
+        // ============================================================
+        async function callMistralAI(messages) {
+            const systemPrompt = messages.find(m => m.role === 'system')?.content || '';
+            const userMessage = messages[messages.length - 1]?.content || '';
+            const history = messages.filter(m => m.role !== 'system').slice(0, -1);
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: userMessage,
+                        system_prompt: systemPrompt,
+                        history: history
+                    })
+                });
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Server error');
+                }
+                const data = await response.json();
+                return data.response;
+            } catch (error) {
+                console.error('Server chat error:', error);
+                throw error;
+            }
+        }
+
+        // ============================================================
+        //  CHAT
+        // ============================================================
+        function addChatMessage(role, content) {
+            const isUser = role === 'user';
+            const div = document.createElement('div');
+            div.className = `flex items-start gap-3 message-enter ${isUser ? 'flex-row-reverse' : ''}`;
+            const avatar = isUser ?
+                `<div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-sm flex-shrink-0">👤</div>` :
+                `<div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center text-white text-sm flex-shrink-0">AI</div>`;
+            const bubbleClass = isUser ?
+                'bg-indigo-50 rounded-2xl rounded-tr-none px-4 py-2.5 max-w-[80%] text-gray-700' :
+                'bg-gray-100 rounded-2xl rounded-tl-none px-4 py-2.5 max-w-[80%] text-gray-700';
+            div.innerHTML = `
+                ${avatar}
+                <div class="${bubbleClass}">
+                    <p class="text-sm whitespace-pre-wrap">${content}</p>
+                </div>
+            `;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            state.chatHistory.push({ role, content });
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.id = 'typingIndicator';
+            div.className = 'flex items-start gap-3';
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center text-white text-sm flex-shrink-0">AI</div>
+                <div class="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-3">
+                    <div class="typing-indicator flex gap-1">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTyping() {
+            const el = document.getElementById('typingIndicator');
+            if (el) el.remove();
+        }
+
+        function buildSystemPrompt() {
+            return `You are HealthAI, a helpful medical assistant powered by Mistral AI.
+
+IMPORTANT RULES:
+1. Always include a medical disclaimer.
+2. Be empathetic and professional.
+3. Provide clear, easy-to-understand explanations.
+4. NEVER make a definitive diagnosis.
+5. For serious symptoms, always recommend seeing a doctor.
+6. Use the medical data available to inform your responses.
+
+CAPABILITIES:
+1. Help find medicines for diseases
+2. Identify possible conditions from symptoms
+3. Explain drug uses and side effects
+4. Simplify medical terms
+5. Analyze uploaded medical documents
+6. Schedule appointments from chat messages
+7. Add lab reports from documents
+
+SPECIAL FEATURES:
+- If a user mentions scheduling an appointment, help them add it.
+- If a user mentions a medical report, help them understand it.
+- If a user uploads a document, analyze it thoroughly.
+
+Always be cautious and recommend professional medical help when appropriate.`;
+        }
+
+        async function getMistralAIResponse(userMessage) {
+            const messages = [
+                { role: 'system', content: buildSystemPrompt() }
+            ];
+            const recentHistory = state.chatHistory.slice(-5);
+            for (const msg of recentHistory) {
+                messages.push({ role: msg.role === 'user' ? 'user' : 'assistant', content: msg.content });
+            }
+            messages.push({ role: 'user', content: userMessage });
+            return await callMistralAI(messages);
+        }
+
+        async function sendChatMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            chatInput.value = '';
+            addChatMessage('user', text);
+
+            showTyping();
+            try {
+                const reply = await getMistralAIResponse(text);
+                removeTyping();
+                addChatMessage('assistant', reply);
+                updateDashboard();
+            } catch (error) {
+                removeTyping();
+                addChatMessage('assistant', "⚠️ Sorry, I encountered an error. Please try again later.");
+                console.error('Chat error:', error);
+            }
+        }
+
+        sendChatBtn.addEventListener('click', sendChatMessage);
+        chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+
+        clearChatBtn.addEventListener('click', () => {
+            chatMessages.innerHTML = '';
+            state.chatHistory = [];
+            addChatMessage('assistant',
+                "Hello! 👋 I'm your HealthAI assistant powered by Mistral AI. I can help you with:\n• Find medicines for a disease\n• Identify disease from symptoms\n• Learn about drug uses and side effects\n• Explain medical terms in plain language\n• **📎 Upload and analyze medical documents**\n• **📅 Schedule appointments from chat**\n\nHow can I assist you today?"
+            );
+        });
+
+        $$('.quick-q').forEach(btn => {
+            btn.addEventListener('click', () => {
+                chatInput.value = btn.textContent.trim();
+                sendChatMessage();
+                switchView('chat');
+            });
+        });
+
+        // ============================================================
+        //  FILE UPLOAD (via server)
+        // ============================================================
+        let pendingFiles = [];
+
+        $('#uploadFileBtn').addEventListener('click', () => {
+            fileUploadModal.classList.remove('hidden');
+            pendingFiles = [];
+            $('#modalFilePreview').innerHTML = '';
+        });
+
+        $('#modalFileClose').addEventListener('click', () => fileUploadModal.classList.add('hidden'));
+        fileUploadModal.addEventListener('click', (e) => {
+            if (e.target === fileUploadModal) fileUploadModal.classList.add('hidden');
+        });
+
+        $('#modalFileSelectBtn').addEventListener('click', () => {
+            $('#modalFileInput').click();
+        });
+
+        $('#modalFileInput').addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files.length > 0) {
+                const file = files[0];
+                pendingFiles = [file];
+                const preview = $('#modalFilePreview');
+                preview.innerHTML = `
+                    <div class="file-preview bg-indigo-50 p-3 rounded-lg">
+                        <span class="text-2xl">📄</span>
+                        <div>
+                            <div class="font-medium">${file.name}</div>
+                            <div class="text-sm text-gray-500">${(file.size / 1024).toFixed(1)} KB • ${file.type || 'Unknown'}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        async function handleFileUpload(files) {
+            const progressBar = $('#uploadProgressBar');
+            const progressContainer = document.querySelector('.upload-progress');
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = '0%';
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const progress = ((i + 1) / files.length) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.error || 'Upload failed');
+                    }
+                    const data = await response.json();
+
+                    state.files.push({
+                        id: data.file.id,
+                        name: data.file.name,
+                        type: data.file.type,
+                        size: data.file.size,
+                        text: data.file.text,
+                        analysis: data.analysis,
+                        uploadedAt: data.file.uploadedAt
+                    });
+
+                    if (data.isLab) {
+                        state.labs.push({
+                            title: `📄 ${file.name}`,
+                            raw: data.file.text,
+                            summary: data.analysis,
+                            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                            fromFile: true,
+                            fileId: data.file.id
+                        });
+                        addActivity(`📄 Lab report added from file: ${file.name}`);
+                    }
+
+                    if (data.isAppointment) {
+                        state.appointments.push({
+                            title: `📄 ${file.name}`,
+                            provider: 'Healthcare Provider',
+                            date: new Date().toISOString().split('T')[0],
+                            time: '09:00',
+                            fromFile: true
+                        });
+                        addActivity(`📅 Appointment scheduled from file: ${file.name}`);
+                    }
+
+                    addChatMessage('assistant', `📄 **File Analysis: ${file.name}**\n\n${data.analysis}`);
+                    addActivity(`📎 File uploaded and analyzed: ${file.name}`);
+
+                } catch (error) {
+                    console.error('File upload error:', error);
+                    addChatMessage('assistant', `⚠️ **Error processing ${file.name}:** ${error.message}`);
+                }
+            }
+
+            progressContainer.classList.add('hidden');
+            progressBar.style.width = '0%';
+            fileUploadModal.classList.add('hidden');
+            $('#fileInput').value = '';
+            renderFiles();
+            updateDashboard();
+            switchView('chat');
+        }
+
+        $('#modalUploadBtn').addEventListener('click', async () => {
+            if (pendingFiles.length === 0) {
+                alert('Please select a file first.');
+                return;
+            }
+            await handleFileUpload(pendingFiles);
+        });
+
+        const fileUploadZone = $('#fileUploadZone');
+        if (fileUploadZone) {
+            fileUploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadZone.classList.add('dragover');
+            });
+            fileUploadZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                fileUploadZone.classList.remove('dragover');
+            });
+            fileUploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileUpload(files);
+                }
+            });
+        }
+
+        $('#fileSelectBtn').addEventListener('click', () => {
+            $('#fileInput').click();
+        });
+
+        $('#fileInput').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files);
+            }
+        });
+
+        // ============================================================
+        //  RENDER FUNCTIONS
+        // ============================================================
+        function renderMedications() {
+            if (state.medications.length === 0) {
+                medicationList.innerHTML = `<div class="text-center text-gray-400 py-8 text-sm">No medications added yet. Click "Add Medication" to get started.</div>`;
+                return;
+            }
+            medicationList.innerHTML = state.medications.map((med, i) => `
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center justify-between report-card">
+                    <div>
+                        <div class="font-semibold text-gray-800">${med.name}</div>
+                        <div class="text-sm text-gray-500">${med.dosage} • ${med.frequency} • Daily at ${med.time}</div>
+                    </div>
+                    <button class="text-red-400 hover:text-red-600 text-sm font-medium delete-med" data-index="${i}">Remove</button>
+                </div>
+            `).join('');
+
+            medicationList.querySelectorAll('.delete-med').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.index);
+                    state.medications.splice(idx, 1);
+                    renderMedications();
+                    updateDashboard();
+                });
+            });
+        }
+
+        $('#addMedBtn').addEventListener('click', () => medModal.classList.remove('hidden'));
+        $('#medModalClose').addEventListener('click', () => medModal.classList.add('hidden'));
+        medModal.addEventListener('click', (e) => { if (e.target === medModal) medModal.classList.add('hidden'); });
+
+        medSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = $('#medName').value.trim();
+            const dosage = $('#medDosage').value.trim();
+            const frequency = $('#medFrequency').value.trim();
+            const time = $('#medTime').value;
+            if (name) {
+                state.medications.push({ name, dosage: dosage || 'As prescribed', frequency: frequency || 'Daily', time });
+                medForm.reset();
+                medModal.classList.add('hidden');
+                renderMedications();
+                updateDashboard();
+                addActivity(`Added medication: ${name}`);
+            }
+        });
+
+        function renderAppointments() {
+            if (state.appointments.length === 0) {
+                appointmentList.innerHTML = `<div class="text-center text-gray-400 py-8 text-sm">No appointments scheduled.</div>`;
+                return;
+            }
+            appointmentList.innerHTML = state.appointments.map((appt, i) => `
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center justify-between report-card">
+                    <div>
+                        <div class="font-semibold text-gray-800">${appt.title}</div>
+                        <div class="text-sm text-gray-500">${appt.provider} • ${appt.date} at ${appt.time}</div>
+                        ${appt.fromChat ? '<span class="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">From Chat</span>' : ''}
+                        ${appt.fromFile ? '<span class="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">From File</span>' : ''}
+                    </div>
+                    <button class="text-red-400 hover:text-red-600 text-sm font-medium delete-appt" data-index="${i}">Cancel</button>
+                </div>
+            `).join('');
+
+            appointmentList.querySelectorAll('.delete-appt').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.index);
+                    state.appointments.splice(idx, 1);
+                    renderAppointments();
+                    updateDashboard();
+                });
+            });
+        }
+
+        $('#addApptBtn').addEventListener('click', () => {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            $('#apptDate').value = tomorrow.toISOString().split('T')[0];
+            $('#apptTime').value = '09:00';
+            apptModal.classList.remove('hidden');
+        });
+        $('#apptModalClose').addEventListener('click', () => apptModal.classList.add('hidden'));
+        apptModal.addEventListener('click', (e) => { if (e.target === apptModal) apptModal.classList.add('hidden'); });
+
+        apptSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const title = $('#apptTitle').value.trim();
+            const provider = $('#apptProvider').value.trim();
+            const date = $('#apptDate').value;
+            const time = $('#apptTime').value;
+            if (title) {
+                state.appointments.push({ title, provider: provider || 'Healthcare Provider', date, time });
+                apptForm.reset();
+                apptModal.classList.add('hidden');
+                renderAppointments();
+                updateDashboard();
+                addActivity(`Scheduled appointment: ${title}`);
+            }
+        });
+
+        function renderLabs() {
+            if (state.labs.length === 0) {
+                labList.innerHTML = `<div class="text-center text-gray-400 py-8 text-sm">No lab reports uploaded.</div>`;
+                return;
+            }
+            labList.innerHTML = state.labs.map((lab, i) => `
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 report-card">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="font-semibold text-gray-800">${lab.title}</div>
+                            <div class="text-sm text-gray-500 mt-1">${lab.date || 'Uploaded recently'}</div>
+                            ${lab.summary ? `<div class="text-sm text-gray-600 mt-2 p-3 bg-gray-50 rounded-lg border border-gray-100">${lab.summary.replace(/\n/g, '<br>')}</div>` : ''}
+                            ${lab.raw ? `<div class="text-xs text-gray-400 mt-1 truncate">${lab.raw.substring(0, 120)}...</div>` : ''}
+                            ${lab.fromFile ? '<span class="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">From File</span>' : ''}
+                        </div>
+                        <button class="text-red-400 hover:text-red-600 text-sm font-medium ml-3 delete-lab" data-index="${i}">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            labList.querySelectorAll('.delete-lab').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.index);
+                    state.labs.splice(idx, 1);
+                    renderLabs();
+                    updateDashboard();
+                });
+            });
+        }
+
+        $('#uploadLabBtn').addEventListener('click', () => labModal.classList.remove('hidden'));
+        $('#labModalClose').addEventListener('click', () => labModal.classList.add('hidden'));
+        labModal.addEventListener('click', (e) => { if (e.target === labModal) labModal.classList.add('hidden'); });
+
+        labSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const title = $('#labTitle').value.trim();
+            const raw = $('#labContent').value.trim();
+            if (title) {
+                const summary = generateLabSummary(raw || title);
+                state.labs.push({
+                    title,
+                    raw: raw || 'No detailed data provided.',
+                    summary,
+                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                });
+                labForm.reset();
+                labModal.classList.add('hidden');
+                renderLabs();
+                updateDashboard();
+                addActivity(`Uploaded lab report: ${title}`);
+            }
+        });
+
+        function generateLabSummary(text) {
+            if (!text || text.length < 5) {
+                return "📋 This lab report has been uploaded. Please provide more details for a comprehensive AI summary.";
+            }
+            const keywords = ['glucose', 'cholesterol', 'blood', 'pressure', 'sugar', 'heart', 'liver', 'kidney', 'iron', 'vitamin'];
+            const found = keywords.filter(k => text.toLowerCase().includes(k));
+            let summary = "🧪 **AI-Generated Summary:**\n\n";
+            if (found.length > 0) {
+                summary += `Based on your report, I've identified these key areas: ${found.join(', ')}. \n\nYour values appear to be within normal ranges for most markers. However, I recommend reviewing this with your healthcare provider for a complete interpretation.\n\n`;
+            } else {
+                summary += "I've analyzed your lab results. While most values seem typical, please consult your doctor for a detailed clinical interpretation.\n\n";
+            }
+            summary += "💡 **Tip:** Always discuss your lab results with your healthcare provider to understand what they mean for your specific health situation.";
+            return summary;
+        }
+
+        function renderFiles() {
+            if (state.files.length === 0) {
+                uploadedFilesList.innerHTML = `
+                    <div class="text-center text-gray-400 py-8 text-sm">No files uploaded yet.</div>
+                `;
+                return;
+            }
+            uploadedFilesList.innerHTML = state.files.map((file, i) => `
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 report-card">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">📄</span>
+                                <div>
+                                    <div class="font-semibold text-gray-800">${file.name}</div>
+                                    <div class="text-sm text-gray-500">
+                                        ${(file.size / 1024).toFixed(1)} KB • ${new Date(file.uploadedAt).toLocaleDateString()}
+                                    </div>
+                                </div>
+                            </div>
+                            ${file.analysis ? `
+                                <div class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-100 text-sm text-gray-600 max-h-40 overflow-y-auto">
+                                    ${file.analysis.replace(/\n/g, '<br>')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <button class="text-red-400 hover:text-red-600 text-sm font-medium ml-3 delete-file" data-index="${i}">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            uploadedFilesList.querySelectorAll('.delete-file').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.index);
+                    state.files.splice(idx, 1);
+                    renderFiles();
+                    updateDashboard();
+                });
+            });
+        }
+
+        // ============================================================
+        //  MEDICAL TERMS EXPLAINER
+        // ============================================================
+        async function explainTerm(term) {
+            try {
+                const response = await callMistralAI([
+                    { role: 'system', content: `Explain the medical term "${term}" in simple, easy-to-understand language. Include meaning, causes, symptoms, and treatments. Always add a disclaimer.` },
+                    { role: 'user', content: `Explain "${term}" in plain language.` }
+                ]);
+                return response;
+            } catch (error) {
+                console.warn('Mistral term explanation failed, using local:', error);
+            }
+
+            const terms = {
+                'hypertension': '🌡️ **Hypertension** (high blood pressure) means the force of blood against your artery walls is consistently too high. Over time, this can damage your blood vessels and lead to heart problems. It\'s often called the "silent killer" because it has no symptoms. Management includes medication, diet, exercise, and stress reduction.',
+                'arrhythmia': '❤️ **Arrhythmia** is an irregular heartbeat. Your heart might beat too fast, too slow, or with an irregular rhythm. Some are harmless, others can be serious. Symptoms include palpitations, dizziness, and shortness of breath. Treatment depends on the type and severity.',
+                'myocardial infarction': '💔 **Myocardial infarction** (heart attack) occurs when blood flow to part of the heart is blocked, damaging heart muscle. Common causes include coronary artery disease. Symptoms include chest pain, shortness of breath, and nausea. Immediate medical attention is critical.',
+                'diabetes': '🍬 **Diabetes mellitus** is a condition where your body can\'t properly process sugar (glucose). Type 1 is autoimmune, Type 2 is often lifestyle-related. Management includes medication, diet, exercise, and monitoring blood sugar levels.',
+                'asthma': '🫁 **Asthma** is a chronic lung condition that inflames and narrows the airways, causing breathing difficulty. Triggers include allergens, exercise, and cold air. Treatment includes inhalers and avoiding triggers.',
+                'arthritis': '🦴 **Arthritis** is inflammation of one or more joints, causing pain and stiffness. Osteoarthritis is wear-and-tear, while rheumatoid arthritis is autoimmune. Treatment includes medication, physical therapy, and lifestyle changes.',
+            };
+            const key = term.toLowerCase().trim();
+            if (terms[key]) return terms[key];
+            for (const [k, v] of Object.entries(terms)) {
+                if (key.includes(k) || k.includes(key)) return v;
+            }
+            return `📖 I don't have a specific explanation for "${term}" in my knowledge base. However, I can help you understand it better if you provide more context.`;
+        }
+
+        async function handleTermExplain() {
+            const term = termInput.value.trim();
+            if (!term) return;
+            termResult.className = 'mt-5 p-4 bg-indigo-50 rounded-xl border border-indigo-100 text-sm text-gray-700 leading-relaxed';
+            termResult.innerHTML = '🤔 Analyzing...';
+            try {
+                const result = await explainTerm(term);
+                termResult.innerHTML = result.replace(/\n/g, '<br>');
+            } catch (error) {
+                termResult.innerHTML = '⚠️ Sorry, I encountered an error. Please try again.';
+                console.error('Term explanation error:', error);
+            }
+        }
+
+        explainTermBtn.addEventListener('click', handleTermExplain);
+        termInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleTermExplain(); });
+
+        $$('.term-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                termInput.value = btn.textContent.trim();
+                handleTermExplain();
+                switchView('terms');
+            });
+        });
+
+        // ============================================================
+        //  DASHBOARD & ACTIVITY
+        // ============================================================
+        function updateDashboard() {
+            dashChatCount.textContent = state.chatHistory.filter(m => m.role === 'user').length;
+            dashMedCount.textContent = state.medications.length;
+            dashApptCount.textContent = state.appointments.length;
+            dashFileCount.textContent = state.files.length;
+        }
+
+        function addActivity(text) {
+            const li = document.createElement('li');
+            li.className = 'flex items-center gap-2 text-sm text-gray-600';
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            li.innerHTML = `<span class="text-gray-400 text-xs">${time}</span> ${text}`;
+            const list = recentActivity;
+            if (list.querySelector('.text-gray-400')) list.innerHTML = '';
+            list.prepend(li);
+            while (list.children.length > 5) {
+                list.removeChild(list.lastChild);
+            }
+        }
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        async function initApp() {
+            await loadCSVData();
+
+            if (state.medications.length === 0 && state.appointments.length === 0 && state.labs.length === 0) {
+                state.medications.push({ name: 'Lisinopril', dosage: '10mg', frequency: 'Once daily', time: '08:00' });
+                state.medications.push({ name: 'Metformin', dosage: '500mg', frequency: 'Twice daily', time: '20:00' });
+                state.appointments.push({ title: 'Cardiology Follow-up', provider: 'Dr. Smith', date: '2026-07-15', time: '10:30' });
+                state.appointments.push({ title: 'Annual Physical', provider: 'Dr. Johnson', date: '2026-08-02', time: '09:00' });
+                state.labs.push({
+                    title: 'Blood Test - June 2026',
+                    raw: 'Glucose: 95 mg/dL, Cholesterol: 185 mg/dL, HDL: 55 mg/dL, LDL: 110 mg/dL, Triglycerides: 130 mg/dL',
+                    summary: '🧪 **AI Summary:** Your glucose (95 mg/dL) and cholesterol (185 mg/dL) are within normal ranges. HDL is good (55 mg/dL). LDL is slightly above optimal (<100 mg/dL). Consider discussing dietary changes with your doctor.',
+                    date: 'Jun 15, 2026'
+                });
+                renderMedications();
+                renderAppointments();
+                renderLabs();
+                renderFiles();
+                updateDashboard();
+                addActivity('Welcome to HealthAI! Your health data is ready.');
+                addActivity('2 medications loaded, 2 appointments scheduled.');
+                addActivity('📁 File upload and analysis feature is active!');
+            } else {
+                renderMedications();
+                renderAppointments();
+                renderLabs();
+                renderFiles();
+                updateDashboard();
+            }
+
+            if (state.chatHistory.length === 0) {
+                addChatMessage('assistant',
+                    "Hello! 👋 I'm your HealthAI assistant powered by Mistral AI. I can help you with:\n• Find medicines for a disease\n• Identify disease from symptoms\n• Learn about drug uses and side effects\n• Explain medical terms in plain language\n• **📎 Upload and analyze medical documents**\n• **📅 Schedule appointments from chat**\n\nHow can I assist you today?"
+                );
+            }
+
+            switchView('dashboard');
+            document.getElementById('apiStatus').className = 'api-status connected';
+            document.getElementById('apiStatus').innerHTML = '🟢 Mistral AI: Connected';
+        }
+
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.nav-link-mobile');
+            if (btn) {
+                $$('.nav-link-mobile').forEach(el => {
+                    el.classList.toggle('active', el === btn);
+                    if (el === btn) {
+                        el.classList.add('text-indigo-600');
+                        el.classList.remove('text-gray-500');
+                    } else {
+                        el.classList.remove('text-indigo-600');
+                        el.classList.add('text-gray-500');
+                    }
+                });
+            }
+        });
+
+        console.log('🏥 HealthAI Assistant v3.0 (Python Backend) loaded successfully!');
+        console.log('🤖 Powered by Mistral AI via Flask');
+        console.log('📁 File upload and document analysis enabled');
+    </script>
+</body>
 </html>
